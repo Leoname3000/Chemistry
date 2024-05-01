@@ -8,9 +8,9 @@ public class FragmentParser
         this.elementWithCount = elementWithCount;
     }
     
-    public Fragment Parse() 
+    public (string Element, int Count) Parse() 
     {  
-        return new Fragment(ReadElement(), ReadCount());
+        return (ReadElement(), ReadCount());
     }
 
     private string ReadElement()

@@ -16,7 +16,7 @@ public class Subformula
         _fragmentsData = new Dictionary<string, int>(fragmentsData);
     }
 
-    public void Add(Fragment newFragment)
+    public void Add((string Element, int Count) newFragment)
     {
         if (_fragmentsData.ContainsKey(newFragment.Element))
             _fragmentsData[newFragment.Element] += newFragment.Count * _formulaCoeff;
