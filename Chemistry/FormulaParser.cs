@@ -17,22 +17,41 @@ public class FormulaParser
         this.formula = formula;
     }
     
-    private string Parse() 
+    private string Parse()
     {
-        var stringFragments = GetFragments();
+        var subformulasDatas = GetSubformulas(formula);
+        Subformula result = new Subformula();
+        foreach (var subformulaData in subformulasDatas)
+        {
+            var fragments = GetFragments(subformulaData.fragments);
+            Subformula subformula = new Subformula(subformulaData.coeff);
+            
+            foreach (var fragment in fragments)
+            {
+                subformula.Add(new FragmentParser(fragment).Parse());
+            }
 
-        Subformula parsedFragments = new Subformula();
-        foreach (var stringFragment in stringFragments)
-            parsedFragments.Add(new FragmentParser(stringFragment).Parse());
+            result = result.Join(subformula);
+        }
 
-        return parsedFragments.ToString();
+        return result.ToString();
     }
 
-    private IEnumerable<string> GetFragments() 
+    private IEnumerable<string> GetFragments(string rawFormula) 
     {
-        return new Regex(@"([A-Z][a-z]*\d*)").Matches(formula)
+        return new Regex(@"([A-Z][a-z]*\d*)").Matches(rawFormula)
                         .Cast<Match>()
                         .Select(match => match.Value)
                         .ToArray();
+    }
+
+    private List<(string fragments, int coeff)> GetSubformulas(string rawFormula)
+    {
+        List<(string fragments, int coeff)> result = new Regex(@"(\(\w*\))\d*").Matches(rawFormula)
+            .Cast<Match>()
+            .Select(match => new SubformulaParser(match.Value).Parse())
+            .ToList();
+        result.Add((Regex.Replace(rawFormula, @"(\(\w*\))\d*", ""), 1));
+        return result;
     }
 }

@@ -41,7 +41,7 @@ public class ChemistryParserUnitTest
         Assert.Equal("C:2,H:6,O:1", FormulaParser.Parse("C2H5OH"));
     }
 
-    [Fact(Skip="MakePreviousBefore")]
+    [Fact]
     public void ShouldParseCopperHydroxide() 
     {
         Assert.Equal("Cu:1,H:2,O:2", FormulaParser.Parse("Cu(OH)2"));
