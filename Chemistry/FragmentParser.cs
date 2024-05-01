@@ -18,9 +18,12 @@ public class FragmentParser
         return elementWithCount.Substring(0, ElementLength());
     }
 
-    private string ReadCount()
+    private int ReadCount()
     {
-        return ElementLength() < elementWithCount.Length ? elementWithCount.Substring(ElementLength()) : "1";
+        int result = 1;
+        if (ElementLength() < elementWithCount.Length)
+            Int32.TryParse(elementWithCount.Substring(ElementLength()), out result);
+        return result;
     }
 
     private int ElementLength()
