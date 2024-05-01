@@ -18,11 +18,21 @@ public class FormulaParser
     }
     
     private string Parse() 
-    {  
-        var fragments = GetFragments();
+    {
+        var stringFragments = GetFragments();
 
-        return string.Join(',', fragments
-        .Select(fragment => new FragmentParser(fragment).Parse())
+        Dictionary<string, int> parsedFragments = new Dictionary<string, int>();
+        foreach (var stringFragment in stringFragments)
+        {
+            Fragment parsedFragment = new FragmentParser(stringFragment).Parse();
+            if (parsedFragments.ContainsKey(parsedFragment.Element))
+                parsedFragments[parsedFragment.Element] += parsedFragment.Count;
+            else
+                parsedFragments.Add(parsedFragment.Element, parsedFragment.Count);
+        }
+
+        return string.Join(',', parsedFragments
+        .Select(entry => $"{entry.Key}:{entry.Value}")
         .Order());
     }
 
