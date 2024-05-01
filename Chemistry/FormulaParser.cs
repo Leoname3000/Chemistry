@@ -21,19 +21,11 @@ public class FormulaParser
     {
         var stringFragments = GetFragments();
 
-        Dictionary<string, int> parsedFragments = new Dictionary<string, int>();
+        Subformula parsedFragments = new Subformula();
         foreach (var stringFragment in stringFragments)
-        {
-            Fragment parsedFragment = new FragmentParser(stringFragment).Parse();
-            if (parsedFragments.ContainsKey(parsedFragment.Element))
-                parsedFragments[parsedFragment.Element] += parsedFragment.Count;
-            else
-                parsedFragments.Add(parsedFragment.Element, parsedFragment.Count);
-        }
+            parsedFragments.Add(new FragmentParser(stringFragment).Parse());
 
-        return string.Join(',', parsedFragments
-        .Select(entry => $"{entry.Key}:{entry.Value}")
-        .Order());
+        return parsedFragments.ToString();
     }
 
     private IEnumerable<string> GetFragments() 
